@@ -6,7 +6,7 @@
     <title>Diligência Elite RJ | Dashboard Jurídico</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
@@ -49,16 +49,6 @@
                 </div>
             </header>
 
-            <section class="view-tabs">
-                <button class="tab-button active" data-view="overview">Visão geral</button>
-                <button class="tab-button" data-view="processos">Processos</button>
-                <button class="tab-button" data-view="cadastro">Nova diligência</button>
-                <button class="tab-button" data-view="operacao">Operação</button>
-                <button class="tab-button" data-view="alvara">Alvará</button>
-                <button class="tab-button" data-view="relatorios">Relatórios</button>
-                <button class="tab-button" data-view="perfil">Perfil</button>
-            </section>
-
             <section class="kpi-grid">
                 <article class="kpi-card">
                     <span class="kpi-title">Total de processos</span>
@@ -76,9 +66,9 @@
                     <p class="kpi-note">Demandas que exigem ação imediata.</p>
                 </article>
                 <article class="kpi-card">
-                    <span class="kpi-title">Arquivados</span>
-                    <strong class="kpi-value" id="kpiArquivados">0</strong>
-                    <p class="kpi-note">Casos finalizados com registro.</p>
+                    <span class="kpi-title">Valor arrecadado</span>
+                    <strong class="kpi-value kpi-value-money" id="kpiArrecadado">R$ 0,00</strong>
+                    <p class="kpi-note">Total consolidado de alvarás cadastrados.</p>
                 </article>
             </section>
 
@@ -161,33 +151,29 @@
                             <input id="formName" type="text" placeholder="Ex: Fórum Central - Rio" required />
                         </label>
                         <label>
-                                <input id="operationDistanciaRoteiro" type="number" min="0" step="0.01" />
-                            </label>
-                            <label>
-                                Tempo estimado (min)
-                                <input id="operationTempoEstimadoMinutos" type="number" min="0" step="1" placeholder="Ex: 143" />
-                                <input id="formProcessNumber" type="text" placeholder="Ex: 0087041-63.2024.8.19.0000" required />
-                            </label>
-                            <label>
-                                Responsável
-                                <input id="formResponsavel" type="text" placeholder="Ex: Leonardo / Carlos" required />
-                            </label>
-                            <label>
-                                Região
-                                <select id="formRegion">
-                                    <option value="Metropolitana">Metropolitana</option>
-                                    <option value="Noroeste Fluminense">Noroeste Fluminense</option>
-                                    <option value="Norte Fluminense">Norte Fluminense</option>
-                                    <option value="Serrana">Serrana</option>
-                                    <option value="Baixadas Litorâneas">Baixadas Litorâneas</option>
-                                    <option value="Médio Paraíba">Médio Paraíba</option>
-                                    <option value="Centro-Sul Fluminense">Centro-Sul Fluminense</option>
-                                    <option value="Costa Verde">Costa Verde</option>
-                                </select>
-                            </label>
-                            <label>
-                                Município
-                                <select id="formMunicipio">
+                            Número do processo
+                            <input id="formProcessNumber" type="text" placeholder="Ex: 0087041-63.2024.8.19.0000" required />
+                        </label>
+                        <label>
+                            Responsável
+                            <input id="formResponsavel" type="text" placeholder="Ex: Leonardo / Carlos" required />
+                        </label>
+                        <label>
+                            Região
+                            <select id="formRegion">
+                                <option value="Metropolitana">Metropolitana</option>
+                                <option value="Noroeste Fluminense">Noroeste Fluminense</option>
+                                <option value="Norte Fluminense">Norte Fluminense</option>
+                                <option value="Serrana">Serrana</option>
+                                <option value="Baixadas Litorâneas">Baixadas Litorâneas</option>
+                                <option value="Médio Paraíba">Médio Paraíba</option>
+                                <option value="Centro-Sul Fluminense">Centro-Sul Fluminense</option>
+                                <option value="Costa Verde">Costa Verde</option>
+                            </select>
+                        </label>
+                        <label>
+                            Município
+                            <select id="formMunicipio">
                                     <option value="Angra dos Reis">Angra dos Reis</option>
                                     <option value="Aperibé">Aperibé</option>
                                     <option value="Araruama">Araruama</option>
@@ -280,30 +266,30 @@
                                     <option value="Varre-Sai">Varre-Sai</option>
                                     <option value="Vassouras">Vassouras</option>
                                     <option value="Volta Redonda">Volta Redonda</option>
-                                </select>
-                            </label>
-                            <label>
-                                Comarca
-                                <input id="formComarca" type="text" placeholder="Ex: Comarca de São Gonçalo" />
-                            </label>
-                            <label>
-                                Status
-                                <select id="formStatus">
-                                    <option value="Urgente">Urgente</option>
-                                    <option value="Pendente">Pendente</option>
-                                    <option value="Concluído">Concluído</option>
-                                    <option value="Em revisão">Em revisão</option>
-                                    <option value="Não Informado">Não Informado</option>
-                                </select>
-                            </label>
-                            <label>
-                                Valor do alvará (R$)
+                            </select>
+                        </label>
+                        <label>
+                            Comarca
+                            <input id="formComarca" type="text" placeholder="Ex: Comarca de São Gonçalo" />
+                        </label>
+                        <label>
+                            Status
+                            <select id="formStatus">
+                                <option value="Urgente">Urgente</option>
+                                <option value="Pendente">Pendente</option>
+                                <option value="Concluído">Concluído</option>
+                                <option value="Em revisão">Em revisão</option>
+                                <option value="Não Informado">Não Informado</option>
+                            </select>
+                        </label>
+                        <label>
+                            Valor do alvará (R$)
                                 <input id="formValorAlvara" type="number" min="0" step="0.01" placeholder="Ex: 1500.00" />
-                            </label>
-                            <label class="full-width">
-                                Resumo da diligência
-                                <textarea id="formSummary" rows="4" placeholder="Descreva rapidamente a diligência"></textarea>
-                            </label>
+                        </label>
+                        <label class="full-width">
+                            Resumo da diligência
+                            <textarea id="formSummary" rows="4" placeholder="Descreva rapidamente a diligência"></textarea>
+                        </label>
                         </div>
                         <div class="form-actions">
                             <span id="formMessage" class="form-message"></span>
