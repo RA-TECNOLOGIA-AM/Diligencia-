@@ -109,6 +109,11 @@
     let editProcessId = null;
     let activeRegion = 'Todas';
     let currentOperationEstimate = null;
+    const metricsCharts = {
+        status: null,
+        regiao: null,
+        tempo: null,
+    };
     const markerGroup = L.layerGroup().addTo(map);
     const OPERATION_ORIGIN = {
         label: 'Carioca, Centro - Rio de Janeiro',
@@ -202,6 +207,191 @@
 
     function formatPercent(value) {
         return `${Number(value || 0).toFixed(1).replace('.', ',')}%`;
+    }
+
+    function toMinutesOrNull(value) {
+        const minutes = Number(value);
+        return Number.isFinite(minutes) && minutes > 0 ? minutes : null;
+    }
+
+    function buildStatusDistribution(dataset) {
+        const labels = ['Concluído', 'Pendente', 'Urgente', 'Em revisão'];
+        const values = labels.map((label) => dataset.filter((item) => item.status === label).length);
+        return { labels, values };
+    }
+
+    function buildRegionDistribution(dataset) {
+        const counts = dataset.reduce((acc, item) => {
+            const key = item.region || 'Não informada';
+            acc[key] = (acc[key] || 0) + 1;
+            return acc;
+        }, {});
+
+        const top = Object.entries(counts)
+            .sort((a, b) => b[1] - a[1])
+            .slice(0, 8);
+
+        return {
+            labels: top.map((entry) => entry[0]),
+            values: top.map((entry) => entry[1]),
+        };
+    }
+
+    function buildAverageTimeByStatus(dataset) {
+        const labels = ['Concluído', 'Pendente', 'Urgente', 'Em revisão'];
+        const values = labels.map((label) => {
+            const durations = dataset
+                .filter((item) => item.status === label)
+                .map((item) => toMinutesOrNull(item.tempo_estimado_minutos))
+                .filter((value) => value !== null);
+
+            if (!durations.length) {
+                return 0;
+            }
+
+            return Math.round(durations.reduce((sum, value) => sum + value, 0) / durations.length);
+        });
+
+        return { labels, values };
+    }
+
+    function ensureMetricCharts() {
+        if (!window.Chart) {
+            return false;
+        }
+
+        const statusCanvas = document.getElementById('metricChartStatus');
+        const regiaoCanvas = document.getElementById('metricChartRegiao');
+        const tempoCanvas = document.getElementById('metricChartTempo');
+
+        if (!statusCanvas || !regiaoCanvas || !tempoCanvas) {
+            return false;
+        }
+
+        const baseLegend = {
+            labels: {
+                color: '#c9d6ea',
+                boxWidth: 14,
+            },
+        };
+
+        if (!metricsCharts.status) {
+            metricsCharts.status = new window.Chart(statusCanvas, {
+                type: 'doughnut',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        data: [],
+                        backgroundColor: ['#10b981', '#f59e0b', '#ef4444', '#3b82f6'],
+                        borderColor: '#182131',
+                        borderWidth: 2,
+                    }],
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    cutout: '66%',
+                    plugins: {
+                        legend: baseLegend,
+                    },
+                },
+            });
+        }
+
+        if (!metricsCharts.regiao) {
+            metricsCharts.regiao = new window.Chart(regiaoCanvas, {
+                type: 'bar',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Diligências',
+                        data: [],
+                        backgroundColor: 'rgba(59, 130, 246, 0.78)',
+                        borderRadius: 8,
+                    }],
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                    },
+                    scales: {
+                        x: {
+                            ticks: { color: '#a6b7d3' },
+                            grid: { color: 'rgba(84, 104, 136, 0.2)' },
+                        },
+                        y: {
+                            ticks: { color: '#a6b7d3', precision: 0 },
+                            grid: { color: 'rgba(84, 104, 136, 0.2)' },
+                        },
+                    },
+                },
+            });
+        }
+
+        if (!metricsCharts.tempo) {
+            metricsCharts.tempo = new window.Chart(tempoCanvas, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Tempo médio (min)',
+                        data: [],
+                        tension: 0.35,
+                        fill: true,
+                        borderWidth: 2,
+                        borderColor: '#f59e0b',
+                        backgroundColor: 'rgba(245, 158, 11, 0.2)',
+                        pointBackgroundColor: '#f59e0b',
+                        pointRadius: 3,
+                    }],
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: baseLegend,
+                    },
+                    scales: {
+                        x: {
+                            ticks: { color: '#a6b7d3' },
+                            grid: { color: 'rgba(84, 104, 136, 0.2)' },
+                        },
+                        y: {
+                            ticks: { color: '#a6b7d3', precision: 0 },
+                            grid: { color: 'rgba(84, 104, 136, 0.2)' },
+                        },
+                    },
+                },
+            });
+        }
+
+        return true;
+    }
+
+    function updateMetricCharts(dataset) {
+        if (!ensureMetricCharts()) {
+            return;
+        }
+
+        const statusDistribution = buildStatusDistribution(dataset);
+        const regionDistribution = buildRegionDistribution(dataset);
+        const timeDistribution = buildAverageTimeByStatus(dataset);
+
+        metricsCharts.status.data.labels = statusDistribution.labels;
+        metricsCharts.status.data.datasets[0].data = statusDistribution.values;
+        metricsCharts.status.update();
+
+        metricsCharts.regiao.data.labels = regionDistribution.labels;
+        metricsCharts.regiao.data.datasets[0].data = regionDistribution.values;
+        metricsCharts.regiao.update();
+
+        metricsCharts.tempo.data.labels = timeDistribution.labels;
+        metricsCharts.tempo.data.datasets[0].data = timeDistribution.values;
+        metricsCharts.tempo.update();
+
+        const updatedAt = document.getElementById('metricsUpdatedAt');
+        if (updatedAt) {
+            updatedAt.textContent = `Atualizado às ${new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}`;
+        }
     }
 
     function parseOptionalMinutes(value) {
@@ -1186,6 +1376,7 @@
         document.getElementById('ringResolvidas').style.setProperty('--pct', String(Math.max(0, Math.min(100, taxaResolvidas))));
         document.getElementById('ringNaoResolvidas').style.setProperty('--pct', String(Math.max(0, Math.min(100, taxaNaoResolvidas))));
         document.getElementById('ringUrgentes').style.setProperty('--pct', String(Math.max(0, Math.min(100, taxaUrgentes))));
+        updateMetricCharts(dataset);
     }
 
     function updateSummary() {

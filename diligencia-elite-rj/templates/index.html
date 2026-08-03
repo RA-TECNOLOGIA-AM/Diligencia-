@@ -140,6 +140,31 @@
                         </article>
                     </div>
                 </section>
+
+                <section class="diligencia-block">
+                    <div class="diligencia-block-header">
+                        <div class="block-step">03</div>
+                        <div>
+                            <h3>Área de métricas</h3>
+                            <p>Gráficos integrados por status, região e tempo estimado.</p>
+                        </div>
+                        <small class="metrics-updated" id="metricsUpdatedAt">Atualização em tempo real</small>
+                    </div>
+                    <div class="metric-chart-grid">
+                        <article class="metric-chart-card">
+                            <h4>Status da carteira</h4>
+                            <div class="chart-wrap"><canvas id="metricChartStatus"></canvas></div>
+                        </article>
+                        <article class="metric-chart-card">
+                            <h4>Volume por região</h4>
+                            <div class="chart-wrap"><canvas id="metricChartRegiao"></canvas></div>
+                        </article>
+                        <article class="metric-chart-card metric-chart-card-wide">
+                            <h4>Tempo médio por status (min)</h4>
+                            <div class="chart-wrap"><canvas id="metricChartTempo"></canvas></div>
+                        </article>
+                    </div>
+                </section>
             </section>
 
             <section class="dashboard-grid" id="overviewView">
@@ -757,6 +782,7 @@
     </div>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
     <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 </body>
 </html>

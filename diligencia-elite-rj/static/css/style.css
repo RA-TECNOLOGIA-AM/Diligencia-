@@ -295,6 +295,12 @@ textarea::placeholder {
     margin-bottom: 14px;
 }
 
+.metrics-updated {
+    margin-left: auto;
+    color: #8ea4c8;
+    font-size: 0.8rem;
+}
+
 .block-step {
     width: 40px;
     height: 40px;
@@ -347,6 +353,40 @@ textarea::placeholder {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 12px;
+}
+
+.metric-chart-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.metric-chart-card {
+    border: 1px solid rgba(46, 62, 88, 0.55);
+    border-radius: 16px;
+    padding: 16px;
+    background: linear-gradient(145deg, rgba(22, 30, 44, 0.9) 0%, rgba(16, 23, 36, 0.85) 100%);
+}
+
+.metric-chart-card h4 {
+    color: #d4e0f2;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 12px;
+}
+
+.metric-chart-card-wide {
+    grid-column: 1 / -1;
+}
+
+.chart-wrap {
+    position: relative;
+    min-height: 240px;
+}
+
+.metric-chart-card-wide .chart-wrap {
+    min-height: 260px;
 }
 
 .diligencia-rate-card {
@@ -1210,6 +1250,10 @@ tbody tr:hover { background: #151e2d; }
         grid-template-columns: 1fr;
     }
 
+    .metric-chart-grid {
+        grid-template-columns: 1fr;
+    }
+
     .planner-grid {
         grid-template-columns: 1fr;
     }
@@ -1268,6 +1312,10 @@ tbody tr:hover { background: #151e2d; }
 
     .diligencia-card-grid {
         grid-template-columns: 1fr;
+    }
+
+    .metrics-updated {
+        margin-left: 0;
     }
 
     .map-popup-grid,
