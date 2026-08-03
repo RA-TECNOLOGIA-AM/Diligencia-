@@ -200,6 +200,10 @@
         return `${hours}h ${remainingMinutes}min`;
     }
 
+    function formatPercent(value) {
+        return `${Number(value || 0).toFixed(1).replace('.', ',')}%`;
+    }
+
     function parseOptionalMinutes(value) {
         if (value === null || value === undefined || value === '') {
             return null;
@@ -1141,6 +1145,47 @@
         document.getElementById('kpiMunicipios').innerText = municipiosAtivos;
         document.getElementById('kpiPendentes').innerText = pendentes;
         document.getElementById('kpiArrecadado').innerText = formatCurrency(totalArrecadado);
+        updateDiligenciaInsights();
+    }
+
+    function updateDiligenciaInsights() {
+        const dataset = processos.length ? processos : diligencias;
+        const total = dataset.length;
+        const pendentes = dataset.filter((item) => item.status === 'Pendente').length;
+        const urgentes = dataset.filter((item) => item.status === 'Urgente').length;
+        const revisao = dataset.filter((item) => item.status === 'Em revisão').length;
+        const resolvidas = dataset.filter((item) => item.status === 'Concluído').length;
+        const naoResolvidas = Math.max(0, total - resolvidas);
+        const municipios = new Set(dataset.map((item) => item.municipio || item.region).filter(Boolean)).size;
+        const arrecadado = dataset.reduce((sum, item) => sum + (Number(item.valor_alvara) || 0), 0);
+
+        const tempos = dataset
+            .map((item) => Number(item.tempo_estimado_minutos))
+            .filter((value) => Number.isFinite(value) && value > 0);
+        const tempoMedio = tempos.length
+            ? tempos.reduce((sum, value) => sum + value, 0) / tempos.length
+            : null;
+
+        document.getElementById('dlgTotal').innerText = String(total);
+        document.getElementById('dlgNaoResolvidas').innerText = String(naoResolvidas);
+        document.getElementById('dlgUrgentes').innerText = String(urgentes);
+        document.getElementById('dlgResolvidas').innerText = String(resolvidas);
+        document.getElementById('dlgRevisao').innerText = String(revisao);
+        document.getElementById('dlgMunicipios').innerText = String(municipios);
+        document.getElementById('dlgArrecadado').innerText = formatCurrency(arrecadado);
+        document.getElementById('dlgTempoMedio').innerText = formatDuration(tempoMedio);
+
+        const taxaResolvidas = total ? (resolvidas / total) * 100 : 0;
+        const taxaNaoResolvidas = total ? (naoResolvidas / total) * 100 : 0;
+        const taxaUrgentes = total ? (urgentes / total) * 100 : 0;
+
+        document.getElementById('rateResolvidas').innerText = formatPercent(taxaResolvidas);
+        document.getElementById('rateNaoResolvidas').innerText = formatPercent(taxaNaoResolvidas);
+        document.getElementById('rateUrgentes').innerText = formatPercent(taxaUrgentes);
+
+        document.getElementById('ringResolvidas').style.setProperty('--pct', String(Math.max(0, Math.min(100, taxaResolvidas))));
+        document.getElementById('ringNaoResolvidas').style.setProperty('--pct', String(Math.max(0, Math.min(100, taxaNaoResolvidas))));
+        document.getElementById('ringUrgentes').style.setProperty('--pct', String(Math.max(0, Math.min(100, taxaUrgentes))));
     }
 
     function updateSummary() {
@@ -1150,6 +1195,7 @@
         document.getElementById('statusConcluido').innerText = dataset.filter((item) => item.status === 'Concluído').length;
         document.getElementById('statusRevisao').innerText = dataset.filter((item) => item.status === 'Em revisão').length;
         updateQuickLists();
+        updateDiligenciaInsights();
     }
 
     function updateQuickLists() {
@@ -1266,6 +1312,7 @@
     const sidebarTabs = document.querySelectorAll('.sidebar-nav a[data-view]');
     const views = {
         overview: document.getElementById('overviewView'),
+        diligencia: document.getElementById('diligenciaView'),
         processos: document.getElementById('processosView'),
         cadastro: document.getElementById('cadastroView'),
         operacao: document.getElementById('operacaoView'),

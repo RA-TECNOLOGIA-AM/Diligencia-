@@ -22,6 +22,7 @@
 
             <nav class="sidebar-nav">
                 <a href="#" class="active" data-view="overview">Mapa</a>
+                <a href="#" data-view="diligencia">Diligência</a>
                 <a href="#" data-view="processos">Processos</a>
                 <a href="#" data-view="cadastro">Cadastrar</a>
                 <a href="#" data-view="operacao">Operação</a>
@@ -70,6 +71,75 @@
                     <strong class="kpi-value kpi-value-money" id="kpiArrecadado">R$ 0,00</strong>
                     <p class="kpi-note">Total consolidado de alvarás cadastrados.</p>
                 </article>
+            </section>
+
+            <section class="panel hidden" id="diligenciaView">
+                <div class="diligencia-hero">
+                    <div>
+                        <p class="panel-eyebrow">Análises • Diligência</p>
+                        <h2>Dashboard de diligências</h2>
+                        <p>Indicadores integrados com processos, operação e financeiro.</p>
+                    </div>
+                </div>
+
+                <section class="diligencia-block">
+                    <div class="diligencia-block-header">
+                        <div class="block-step">01</div>
+                        <div>
+                            <h3>Indicadores do período</h3>
+                            <p>Volume, status e produtividade operacional.</p>
+                        </div>
+                    </div>
+                    <div class="diligencia-card-grid">
+                        <article class="diligencia-stat-card"><span>Total de diligências</span><strong id="dlgTotal">0</strong></article>
+                        <article class="diligencia-stat-card"><span>Não resolvidas</span><strong id="dlgNaoResolvidas">0</strong></article>
+                        <article class="diligencia-stat-card"><span>Urgentes</span><strong id="dlgUrgentes">0</strong></article>
+                        <article class="diligencia-stat-card"><span>Resolvidas</span><strong id="dlgResolvidas">0</strong></article>
+                        <article class="diligencia-stat-card"><span>Em revisão</span><strong id="dlgRevisao">0</strong></article>
+                        <article class="diligencia-stat-card"><span>Municípios ativos</span><strong id="dlgMunicipios">0</strong></article>
+                        <article class="diligencia-stat-card"><span>Valor arrecadado</span><strong id="dlgArrecadado">R$ 0,00</strong></article>
+                        <article class="diligencia-stat-card"><span>Tempo médio estimado</span><strong id="dlgTempoMedio">-</strong></article>
+                    </div>
+                </section>
+
+                <section class="diligencia-block">
+                    <div class="diligencia-block-header">
+                        <div class="block-step">02</div>
+                        <div>
+                            <h3>Taxas do período</h3>
+                            <p>Performance de resolução e criticidade da carteira.</p>
+                        </div>
+                    </div>
+                    <div class="diligencia-rate-grid">
+                        <article class="diligencia-rate-card">
+                            <h4>Taxa de resolvidas</h4>
+                            <div class="rate-gauge" id="ringResolvidas" style="--pct:0;">
+                                <div>
+                                    <strong id="rateResolvidas">0,0%</strong>
+                                    <small>Meta: 85%</small>
+                                </div>
+                            </div>
+                        </article>
+                        <article class="diligencia-rate-card">
+                            <h4>Taxa de não resolvidas</h4>
+                            <div class="rate-gauge" id="ringNaoResolvidas" style="--pct:0;">
+                                <div>
+                                    <strong id="rateNaoResolvidas">0,0%</strong>
+                                    <small>Máx: 15%</small>
+                                </div>
+                            </div>
+                        </article>
+                        <article class="diligencia-rate-card">
+                            <h4>Taxa de urgentes</h4>
+                            <div class="rate-gauge" id="ringUrgentes" style="--pct:0;">
+                                <div>
+                                    <strong id="rateUrgentes">0,0%</strong>
+                                    <small>Alvo: &lt; 10%</small>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+                </section>
             </section>
 
             <section class="dashboard-grid" id="overviewView">
