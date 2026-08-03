@@ -108,7 +108,10 @@
     let reportHistory = [];
     let editProcessId = null;
     let activeRegion = 'Todas';
+    let currentView = 'overview';
     let currentOperationEstimate = null;
+    let hasCenteredMap = false;
+    let metricsSnapshotKey = '';
     const metricsCharts = {
         status: null,
         regiao: null,
@@ -290,6 +293,7 @@
                 options: {
                     maintainAspectRatio: false,
                     cutout: '66%',
+                    animation: false,
                     plugins: {
                         legend: baseLegend,
                     },
@@ -306,11 +310,15 @@
                         label: 'Diligências',
                         data: [],
                         backgroundColor: 'rgba(59, 130, 246, 0.78)',
+                        barPercentage: 0.42,
+                        categoryPercentage: 0.58,
+                        maxBarThickness: 24,
                         borderRadius: 8,
                     }],
                 },
                 options: {
                     maintainAspectRatio: false,
+                    animation: false,
                     plugins: {
                         legend: { display: false },
                     },
@@ -347,6 +355,7 @@
                 },
                 options: {
                     maintainAspectRatio: false,
+                    animation: false,
                     plugins: {
                         legend: baseLegend,
                     },
@@ -375,18 +384,29 @@
         const statusDistribution = buildStatusDistribution(dataset);
         const regionDistribution = buildRegionDistribution(dataset);
         const timeDistribution = buildAverageTimeByStatus(dataset);
+        const snapshot = JSON.stringify({
+            s: statusDistribution.values,
+            r: regionDistribution.values,
+            t: timeDistribution.values,
+        });
+
+        if (snapshot === metricsSnapshotKey) {
+            return;
+        }
+
+        metricsSnapshotKey = snapshot;
 
         metricsCharts.status.data.labels = statusDistribution.labels;
         metricsCharts.status.data.datasets[0].data = statusDistribution.values;
-        metricsCharts.status.update();
+        metricsCharts.status.update('none');
 
         metricsCharts.regiao.data.labels = regionDistribution.labels;
         metricsCharts.regiao.data.datasets[0].data = regionDistribution.values;
-        metricsCharts.regiao.update();
+        metricsCharts.regiao.update('none');
 
         metricsCharts.tempo.data.labels = timeDistribution.labels;
         metricsCharts.tempo.data.datasets[0].data = timeDistribution.values;
-        metricsCharts.tempo.update();
+        metricsCharts.tempo.update('none');
 
         const updatedAt = document.getElementById('metricsUpdatedAt');
         if (updatedAt) {
@@ -837,6 +857,7 @@
             chip.innerText = region;
             chip.addEventListener('click', () => {
                 activeRegion = region;
+                hasCenteredMap = false;
                 renderChips();
                 renderMarkers();
             });
@@ -935,7 +956,10 @@
 
         const first = filtered[0];
         mapPrimary.innerText = first.name;
-        map.flyTo([first.lat, first.lng], 10, { duration: 1.2 });
+        if (!hasCenteredMap) {
+            map.setView([first.lat, first.lng], 10);
+            hasCenteredMap = true;
+        }
     }
 
     async function loadDiligencias() {
@@ -1481,6 +1505,7 @@
     }
 
     function handleRefreshMap() {
+        hasCenteredMap = false;
         loadDiligencias();
     }
 
@@ -1513,6 +1538,7 @@
     };
 
     function setActiveView(view) {
+        currentView = view;
         Object.entries(views).forEach(([viewName, element]) => {
             element.classList.toggle('hidden', viewName !== view);
         });
