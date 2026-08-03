@@ -6,4 +6,11 @@ services:
     autoDeploy: true
     buildCommand: pip install -r requirements.txt
     startCommand: gunicorn app:app
-    healthCheckPath: /
+    healthCheckPath: /health
+    envVars:
+      - key: APP_DATA_DIR
+        value: /var/data
+    disk:
+      name: diligencia-state
+      mountPath: /var/data
+      sizeGB: 1
