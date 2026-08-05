@@ -77,10 +77,10 @@ textarea::placeholder {
 
 .page-shell {
     display: grid;
-    grid-template-columns: 280px 1fr;
+    grid-template-columns: 240px 1fr;
     min-height: 100vh;
-    gap: 20px;
-    padding: 32px;
+    gap: 14px;
+    padding: 18px;
     background: transparent;
 }
 
@@ -90,10 +90,10 @@ textarea::placeholder {
     backdrop-filter: blur(10px);
     box-shadow: var(--shadow);
     border-radius: var(--radius);
-    padding: 28px;
+    padding: 18px;
     display: flex;
     flex-direction: column;
-    gap: 32px;
+    gap: 18px;
     transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
@@ -105,43 +105,45 @@ textarea::placeholder {
 .brand-card {
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: 12px;
 }
 
 .brand-mark {
-    height: 52px;
-    width: 52px;
-    border-radius: 18px;
+    height: 40px;
+    width: 40px;
+    border-radius: 12px;
     background: linear-gradient(135deg, #3b82f6 0%, #0ea5e9 100%);
     display: grid;
     place-items: center;
     color: white;
     font-weight: 700;
+    font-size: 0.9rem;
 }
 
 .brand-label {
     display: block;
-    font-size: 0.9rem;
+    font-size: 0.75rem;
     color: var(--muted);
 }
 
 .brand-card strong {
-    font-size: 1.25rem;
+    font-size: 0.95rem;
 }
 
 .sidebar-nav {
     display: grid;
-    gap: 12px;
+    gap: 8px;
 }
 
 .sidebar-nav a {
     display: block;
-    padding: 14px 18px;
-    border-radius: 14px;
+    padding: 10px 14px;
+    border-radius: 12px;
     color: var(--text);
     text-decoration: none;
     border: 1px solid transparent;
     transition: all 0.2s ease;
+    font-size: 0.9rem;
 }
 
 .sidebar-nav a.active,
@@ -173,18 +175,18 @@ textarea::placeholder {
 .main-content {
     display: flex;
     flex-direction: column;
-    gap: 28px;
+    gap: 16px;
     background: linear-gradient(160deg, rgba(10, 16, 27, 0.82) 0%, rgba(6, 11, 20, 0.65) 100%);
     border: 1px solid rgba(36, 50, 74, 0.65);
     border-radius: var(--radius);
-    padding: 26px;
+    padding: 16px;
     box-shadow: var(--shadow);
 }
 
 .page-header {
     display: flex;
     justify-content: space-between;
-    gap: 24px;
+    gap: 16px;
     align-items: flex-start;
 }
 
@@ -193,25 +195,27 @@ textarea::placeholder {
     text-transform: uppercase;
     letter-spacing: 0.14em;
     color: #8fa2bd;
-    font-size: 0.78rem;
-    margin-bottom: 0.65rem;
+    font-size: 0.65rem;
+    margin-bottom: 0.4rem;
 }
 
 .page-header h1 {
-    font-size: clamp(2rem, 2.4vw, 2.8rem);
+    font-size: clamp(1.4rem, 2vw, 1.8rem);
     line-height: 1.05;
+    margin-bottom: 6px;
 }
 
 .subtitle {
     color: var(--muted);
     max-width: 680px;
-    margin-top: 12px;
-    line-height: 1.75;
+    margin-top: 8px;
+    line-height: 1.5;
+    font-size: 0.85rem;
 }
 
 .header-actions {
     display: flex;
-    gap: 12px;
+    gap: 10px;
     flex-wrap: wrap;
 }
 
@@ -219,22 +223,23 @@ textarea::placeholder {
 .button-secondary,
 .icon-button {
     border: none;
-    border-radius: 14px;
+    border-radius: 10px;
     cursor: pointer;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
+    font-size: 0.85rem;
 }
 
 .button-primary {
     background: linear-gradient(135deg, #2563eb 0%, #0ea5e9 100%);
     color: white;
-    padding: 14px 22px;
+    padding: 10px 16px;
     box-shadow: 0 18px 40px rgba(14, 165, 233, 0.24);
 }
 
 .button-secondary {
     background: #151b26;
     color: var(--text);
-    padding: 14px 22px;
+    padding: 10px 16px;
     border: 1px solid var(--border);
 }
 
@@ -245,19 +250,20 @@ textarea::placeholder {
 }
 
 .icon-button {
-    width: 46px;
-    height: 46px;
+    width: 38px;
+    height: 38px;
     display: grid;
     place-items: center;
     background: #151b26;
     border: 1px solid var(--border);
     color: var(--text);
+    font-size: 0.8rem;
 }
 
 .kpi-grid {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 20px;
+    gap: 14px;
 }
 
 #diligenciaView {
@@ -443,8 +449,8 @@ textarea::placeholder {
 }
 
 .kpi-card {
-    padding: 26px;
-    border-radius: var(--radius);
+    padding: 16px;
+    border-radius: 16px;
     background: linear-gradient(160deg, rgba(22, 29, 41, 0.95) 0%, rgba(15, 19, 27, 0.92) 100%);
     border: 1px solid var(--border);
     box-shadow: var(--shadow);
@@ -460,25 +466,28 @@ textarea::placeholder {
 .kpi-title {
     display: block;
     color: var(--muted);
-    font-size: 0.95rem;
-    margin-bottom: 10px;
+    font-size: 0.75rem;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
 }
 
 .kpi-value {
     display: block;
-    font-size: 2.35rem;
+    font-size: 1.6rem;
     line-height: 1;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
 }
 
 .kpi-value-money {
-    font-size: clamp(1.6rem, 2vw, 2.1rem);
+    font-size: clamp(1.2rem, 1.6vw, 1.6rem);
     letter-spacing: 0.01em;
 }
 
 .kpi-note {
     color: var(--muted);
-    line-height: 1.75;
+    line-height: 1.5;
+    font-size: 0.75rem;
 }
 
 .dashboard-grid {
@@ -490,9 +499,9 @@ textarea::placeholder {
 .panel {
     background: linear-gradient(160deg, rgba(22, 29, 41, 0.95) 0%, rgba(15, 19, 27, 0.92) 100%);
     border: 1px solid var(--border);
-    border-radius: var(--radius);
+    border-radius: 16px;
     box-shadow: var(--shadow);
-    padding: 24px;
+    padding: 16px;
     transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
     animation: riseIn 420ms ease both;
 }
@@ -589,17 +598,17 @@ textarea::placeholder {
 .panel-header {
     display: flex;
     justify-content: space-between;
-    gap: 16px;
+    gap: 12px;
     align-items: center;
-    margin-bottom: 22px;
-    padding-bottom: 12px;
+    margin-bottom: 14px;
+    padding-bottom: 10px;
     border-bottom: 1px solid rgba(50, 68, 96, 0.35);
 }
 
 .panel-header h2,
 .table-panel h2 {
-    font-size: 1.35rem;
-    margin-top: 6px;
+    font-size: 1.1rem;
+    margin-top: 4px;
 }
 
 .panel-actions,
@@ -634,8 +643,8 @@ textarea::placeholder {
 }
 
 .map-view {
-    height: 540px;
-    border-radius: 24px;
+    height: 380px;
+    border-radius: 18px;
     overflow: hidden;
     border: 1px solid #273449;
 }
