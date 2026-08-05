@@ -944,8 +944,8 @@
                     <div class="map-popup-text">${diligencia.resumo || 'Resumo operacional ainda não informado.'}</div>
                     <div class="map-popup-text">${buildOperationalSummary(diligencia) || 'Dados operacionais ainda não informados.'}</div>
                     <div class="map-popup-actions">
-                        <button type="button" class="map-popup-button primary" onclick="window.openAIResumo('${diligencia.name}')">Resumo de IA</button>
-                        <a class="map-popup-button" href="${buildGoogleMapsUrl({ municipio: diligencia.municipio })}" target="_blank" rel="noopener">Abrir rota</a>
+                        <button type="button" class="map-popup-button primary" onclick="filterByStatus('${diligencia.status}')">Ver todos</button>
+                        <a class="map-popup-button" href="${buildGoogleMapsUrl({ municipio: diligencia.municipio })}" target="_blank" rel="noopener">Rota</a>
                     </div>
                 </div>
             `);
@@ -1560,6 +1560,13 @@
         setActiveView('cadastro');
         views.cadastro.scrollIntoView({ behavior: 'smooth' });
     }
+
+    window.filterByStatus = function(status) {
+        statusFilter.value = status;
+        setActiveView('processos');
+        renderProcessTable();
+        views.processos.scrollIntoView({ behavior: 'smooth' });
+    };
 
     viewTabs.forEach((button) => {
         button.addEventListener('click', () => setActiveView(button.dataset.view));
