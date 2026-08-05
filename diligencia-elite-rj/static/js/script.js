@@ -1084,11 +1084,26 @@
         }
 
         const [lat, lng] = getCoordinatesForMunicipio(payload.municipio);
+
+        // Calculate route estimate to fill in tempo_estimado_minutos
+        let durationMinutes = 0;
+        let distanceKm = 0;
+        try {
+            const tempProcess = { municipio: payload.municipio };
+            const estimate = await fetchRouteEstimate(tempProcess);
+            durationMinutes = estimate.durationMinutes || 0;
+            distanceKm = estimate.distanceKm || 0;
+        } catch (error) {
+            console.warn('Could not calculate route estimate:', error);
+        }
+
         const diligenciaPayload = {
             ...payload,
             lat,
             lng,
             processos: 1,
+            tempo_estimado_minutos: durationMinutes,
+            distancia_roteiro: distanceKm,
         };
 
         try {
