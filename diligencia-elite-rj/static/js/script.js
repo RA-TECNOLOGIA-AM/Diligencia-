@@ -1103,17 +1103,15 @@
             }
 
             const newDiligencia = await responseDiligencia.json();
-            diligencias = diligencias.filter((item) => item.process_number !== newDiligencia.process_number);
-            diligencias.push(newDiligencia);
-            writeCache(CACHE_KEYS.diligencias, diligencias);
-            renderChips();
-            renderMarkers();
-            await loadProcessos();
-            const createdProcess = processos.find((item) => item.numero === payload.process_number);
-
-            updateQuickLists();
             showFormMessage('Diligência salva com sucesso.');
             resetForm();
+
+            // Reload data from server to ensure consistency
+            await loadDiligencias();
+            await loadProcessos();
+            updateQuickLists();
+
+            const createdProcess = processos.find((item) => item.numero === payload.process_number);
             if (createdProcess) {
                 setActiveView('operacao');
                 populateOperationProcessOptions(createdProcess.id);
