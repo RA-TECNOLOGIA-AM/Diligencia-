@@ -7,10 +7,15 @@ so services configured at repository root can run with `gunicorn app:app`.
 from __future__ import annotations
 
 import importlib.util
+import sys
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent
-TARGET_APP = BASE_DIR / "diligencia-elite-rj" / "app.py"
+TARGET_DIR = BASE_DIR / "diligencia-elite-rj"
+TARGET_APP = TARGET_DIR / "app.py"
+
+# Add the target directory to sys.path so imports work correctly
+sys.path.insert(0, str(TARGET_DIR))
 
 spec = importlib.util.spec_from_file_location("diligencia_app", TARGET_APP)
 if spec is None or spec.loader is None:
@@ -24,4 +29,4 @@ app.template_folder = str(BASE_DIR / "diligencia-elite-rj" / "templates")
 app.static_folder = str(BASE_DIR / "diligencia-elite-rj" / "static")
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=int(__import__('os').getenv('PORT', '10000')))
+    app.run(host="0.0.0.0", port=10000)
