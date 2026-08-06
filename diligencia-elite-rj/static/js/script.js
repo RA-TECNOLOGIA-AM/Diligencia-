@@ -1313,21 +1313,19 @@
                 throw new Error('Falha ao excluir processo.');
             }
 
-            processos = processos.filter((item) => item.id !== id);
-            if (processItem?.numero) {
-                diligencias = diligencias.filter((item) => item.process_number !== processItem.numero);
-            }
-            writeCache(CACHE_KEYS.diligencias, diligencias);
-            writeCache(CACHE_KEYS.processos, processos);
+            // Reload from server to ensure consistency
             await loadDiligencias();
-            renderProcessTable();
-            renderAlvaraTable();
+            await loadProcessos();
             updateKpis();
             updateSummary();
+            renderProcessTable();
+            renderAlvaraTable();
 
             if (fromModal) {
                 closeEditModal();
             }
+
+            alert('Processo excluído com sucesso.');
         } catch (error) {
             console.error(error);
             alert('Não foi possível excluir o processo.');
