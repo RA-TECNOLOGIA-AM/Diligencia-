@@ -126,7 +126,9 @@
 
     async function loadMunicipioCoordinates() {
         try {
-            const response = await fetch('/api/municipios-coords');
+            const response = await fetch('/api/municipios-coords', {
+                headers: auth.getAuthHeaders()
+            });
             if (!response.ok) {
                 throw new Error('Falha ao carregar coordenadas de municípios.');
             }
@@ -723,7 +725,10 @@
         try {
             const response = await fetch(`/api/processos/${processo.id}`, {
                 method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {
+                    'Content-Type': 'application/json',
+                    ...auth.getAuthHeaders()
+                },
                 body: JSON.stringify(payload),
             });
 
@@ -964,7 +969,9 @@
 
     async function loadDiligencias() {
         try {
-            const response = await fetch('/api/diligencias');
+            const response = await fetch('/api/diligencias', {
+                headers: auth.getAuthHeaders()
+            });
             diligencias = await response.json();
             if (!Array.isArray(diligencias)) {
                 diligencias = [];
@@ -1038,7 +1045,10 @@
         try {
             const response = await fetch(`/api/processos/${editProcessId}`, {
                 method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {
+                    'Content-Type': 'application/json',
+                    ...auth.getAuthHeaders()
+                },
                 body: JSON.stringify(payload),
             });
 
@@ -1109,7 +1119,10 @@
         try {
             const responseDiligencia = await fetch('/api/diligencias', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {
+                    'Content-Type': 'application/json',
+                    ...auth.getAuthHeaders()
+                },
                 body: JSON.stringify(diligenciaPayload),
             });
 
@@ -1258,7 +1271,10 @@
 
                 const response = await fetch(`/api/processos/${processo.id}`, {
                     method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: {
+                        'Content-Type': 'application/json',
+                        ...auth.getAuthHeaders()
+                    },
                     body: JSON.stringify(payload),
                 });
 
@@ -1294,6 +1310,7 @@
             const processItem = processos.find((item) => item.id === id);
             let response = await fetch(`/api/processos/${id}`, {
                 method: 'DELETE',
+                headers: auth.getAuthHeaders()
             });
             let treatAsDeleted = false;
 
@@ -1303,6 +1320,7 @@
                 if (freshProcess) {
                     response = await fetch(`/api/processos/${freshProcess.id}`, {
                         method: 'DELETE',
+                        headers: auth.getAuthHeaders()
                     });
                 } else {
                     treatAsDeleted = true;
@@ -1334,7 +1352,9 @@
 
     async function loadProcessos() {
         try {
-            const response = await fetch('/api/processos');
+            const response = await fetch('/api/processos', {
+                headers: auth.getAuthHeaders()
+            });
             processos = await response.json();
             if (!Array.isArray(processos)) {
                 processos = [];
@@ -1465,7 +1485,9 @@
 
     async function loadReportHistory() {
         try {
-            const response = await fetch('/api/relatorios/historico');
+            const response = await fetch('/api/relatorios/historico', {
+                headers: auth.getAuthHeaders()
+            });
             reportHistory = await response.json();
             if (!Array.isArray(reportHistory)) {
                 reportHistory = [];
@@ -1486,7 +1508,9 @@
         }
 
         try {
-            const response = await fetch('/api/processos/relatorio-docx');
+            const response = await fetch('/api/processos/relatorio-docx', {
+                headers: auth.getAuthHeaders()
+            });
             if (!response.ok) {
                 throw new Error('Falha ao gerar relatório.');
             }
