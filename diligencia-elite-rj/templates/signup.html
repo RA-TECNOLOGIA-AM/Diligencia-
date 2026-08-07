@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro - Diligência Elite RJ</title>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/auth.css">
+</head>
+<body class="auth-page">
+    <div class="auth-container">
+        <div class="auth-card auth-card-large">
+            <div class="auth-header">
+                <h1>Criar Conta</h1>
+                <p>Diligência Elite RJ</p>
+            </div>
+
+            <form id="signupForm" class="auth-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="name">Nome</label>
+                        <input type="text" id="name" name="name" required placeholder="João">
+                        <span class="error-message" id="nameError"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="surname">Sobrenome</label>
+                        <input type="text" id="surname" name="surname" required placeholder="Silva">
+                        <span class="error-message" id="surnameError"></span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" required placeholder="seu@email.com">
+                    <span class="error-message" id="emailError"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="username">Nome de Usuário</label>
+                    <input type="text" id="username" name="username" required placeholder="usuario123">
+                    <span class="error-message" id="usernameError"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">Telefone (opcional)</label>
+                    <input type="tel" id="phone" name="phone" placeholder="(21) 99999-9999">
+                    <span class="error-message" id="phoneError"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Senha</label>
+                    <div class="password-input">
+                        <input type="password" id="password" name="password" required placeholder="••••••••">
+                        <button type="button" class="toggle-password" id="togglePassword">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                <circle cx="12" cy="12" r="3"></circle>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="password-strength" id="strengthMeter">
+                        <div class="strength-bar"></div>
+                    </div>
+                    <span class="error-message" id="passwordError"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="confirmPassword">Confirmar Senha</label>
+                    <div class="password-input">
+                        <input type="password" id="confirmPassword" name="confirmPassword" required placeholder="••••••••">
+                        <button type="button" class="toggle-password" id="toggleConfirmPassword">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                <circle cx="12" cy="12" r="3"></circle>
+                            </svg>
+                        </button>
+                    </div>
+                    <span class="error-message" id="confirmPasswordError"></span>
+                </div>
+
+                <div class="form-group checkbox">
+                    <input type="checkbox" id="acceptTerms" name="acceptTerms" required>
+                    <label for="acceptTerms">Aceito os <a href="#" class="link">Termos de Serviço</a> e <a href="#" class="link">Política de Privacidade</a></label>
+                    <span class="error-message" id="termsError"></span>
+                </div>
+
+                <button type="submit" class="btn btn-primary" id="submitBtn">
+                    <span id="btnText">Criar Conta</span>
+                    <span class="spinner" id="spinner" style="display: none;"></span>
+                </button>
+
+                <span class="error-message" id="generalError"></span>
+                <span class="success-message" id="successMessage"></span>
+            </form>
+
+            <div class="auth-footer">
+                Já tem uma conta? <a href="/login" class="link-primary">Fazer login</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/js/auth.js"></script>
+    <script>
+        document.getElementById('togglePassword').addEventListener('click', (e) => {
+            e.preventDefault();
+            const input = document.getElementById('password');
+            input.type = input.type === 'password' ? 'text' : 'password';
+        });
+
+        document.getElementById('toggleConfirmPassword').addEventListener('click', (e) => {
+            e.preventDefault();
+            const input = document.getElementById('confirmPassword');
+            input.type = input.type === 'password' ? 'text' : 'password';
+        });
+
+        document.getElementById('password').addEventListener('input', (e) => {
+            const password = e.target.value;
+            const strength = calculatePasswordStrength(password);
+            const bar = document.querySelector('.strength-bar');
+            bar.style.width = strength.percentage + '%';
+            bar.className = 'strength-bar strength-' + strength.level;
+        });
+
+        function calculatePasswordStrength(password) {
+            let score = 0;
+            if (password.length >= 8) score++;
+            if (/[A-Z]/.test(password)) score++;
+            if (/[a-z]/.test(password)) score++;
+            if (/[0-9]/.test(password)) score++;
+            if (/[!@#$%^&*()_+\-=\[\]{}|;:,.<>?]/.test(password)) score++;
+
+            const levels = ['weak', 'fair', 'good', 'strong', 'very-strong'];
+            return {
+                level: levels[Math.min(score - 1, 4)] || 'weak',
+                percentage: (score / 5) * 100
+            };
+        }
+
+        document.getElementById('signupForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const formData = {
+                name: document.getElementById('name').value,
+                surname: document.getElementById('surname').value,
+                email: document.getElementById('email').value,
+                username: document.getElementById('username').value,
+                phone: document.getElementById('phone').value,
+                password: document.getElementById('password').value,
+                confirm_password: document.getElementById('confirmPassword').value,
+                accept_terms: document.getElementById('acceptTerms').checked
+            };
+
+            document.getElementById('generalError').textContent = '';
+            document.querySelectorAll('.error-message').forEach(el => el.textContent = '');
+            document.getElementById('submitBtn').disabled = true;
+            document.getElementById('btnText').style.display = 'none';
+            document.getElementById('spinner').style.display = 'inline-block';
+
+            try {
+                const response = await fetch('/auth/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(formData)
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    if (data.error) {
+                        document.getElementById('generalError').textContent = data.error;
+                    }
+                    return;
+                }
+
+                document.getElementById('successMessage').textContent = 'Conta criada com sucesso! Redirecionando...';
+                setTimeout(() => window.location.href = '/login', 2000);
+            } catch (error) {
+                document.getElementById('generalError').textContent = 'Erro de conexão. Tente novamente.';
+            } finally {
+                document.getElementById('submitBtn').disabled = false;
+                document.getElementById('btnText').style.display = 'inline';
+                document.getElementById('spinner').style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>

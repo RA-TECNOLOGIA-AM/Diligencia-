@@ -14,7 +14,11 @@ from docx.oxml.ns import qn
 from docx.oxml.parser import OxmlElement
 from docx.shared import Inches, Pt, RGBColor
 
-from models import db, Diligencia, Processo, ReportHistory
+from models import db, Diligencia, Processo, ReportHistory, User, Role, Permission
+from auth import auth_bp
+from users import users_bp
+from admin import admin_bp
+from auth.utils import require_auth, require_role
 
 app = Flask(__name__)
 
@@ -30,6 +34,10 @@ else:
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db.init_app(app)
+
+app.register_blueprint(auth_bp)
+app.register_blueprint(users_bp)
+app.register_blueprint(admin_bp)
 
 STATE_LOCK = Lock()
 BASE_DIR = Path(__file__).resolve().parent
@@ -587,11 +595,28 @@ def init_db():
 def index():
     return render_template('index.html')
 
+@app.route('/login')
+def login_page():
+    return render_template('login.html')
+
+@app.route('/signup')
+def signup_page():
+    return render_template('signup.html')
+
+@app.route('/forgot-password')
+def forgot_password_page():
+    return render_template('forgot-password.html')
+
+@app.route('/reset-password')
+def reset_password_page():
+    return render_template('reset-password.html')
+
 @app.route('/api/municipios-coords', methods=['GET'])
 def get_municipios_coords():
     return jsonify({name: {'lat': coords[0], 'lng': coords[1]} for name, coords in municipio_coordinates.items()})
 
 @app.route('/api/diligencias', methods=['GET', 'POST'])
+@require_auth
 def get_diligencias():
     with app.app_context():
         if request.method == 'POST':
@@ -687,6 +712,7 @@ def get_diligencias():
         return jsonify(diligencias_list)
 
 @app.route('/api/processos', methods=['GET', 'POST'])
+@require_auth
 def get_processos():
     with app.app_context():
         if request.method == 'POST':
@@ -778,6 +804,7 @@ def get_processos():
         return jsonify(processos_list)
 
 @app.route('/api/processos/<int:process_id>', methods=['PUT'])
+@require_auth
 def update_processo(process_id):
     with app.app_context():
         data = request.get_json() or {}
@@ -828,6 +855,7 @@ def update_processo(process_id):
         return jsonify(process_to_update.to_dict())
 
 @app.route('/api/processos/<int:process_id>', methods=['DELETE'])
+@require_auth
 def delete_processo(process_id):
     with app.app_context():
         process_to_delete = Processo.query.get(process_id)
@@ -846,6 +874,7 @@ def delete_processo(process_id):
 
 
 @app.route('/api/processos/relatorio-docx', methods=['GET'])
+@require_auth
 def export_processos_docx():
     with app.app_context():
         report_data = [p.to_dict() for p in Processo.query.all()]
@@ -876,6 +905,7 @@ def export_processos_docx():
 
 
 @app.route('/api/relatorios/historico', methods=['GET'])
+@require_auth
 def get_report_history():
     with app.app_context():
         report_history_list = [r.to_dict() for r in ReportHistory.query.all()]

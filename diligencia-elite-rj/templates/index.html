@@ -9,8 +9,16 @@
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}">
 </head>
 <body>
+    <nav class="navbar" id="navbar">
+        <div class="navbar-brand">Diligência Elite RJ</div>
+        <div class="navbar-user">
+            <span id="userDisplay" class="user-display"></span>
+            <button id="logoutBtn" class="btn btn-primary" style="margin-left: 12px;">Sair</button>
+        </div>
+    </nav>
     <div class="page-shell">
         <aside class="sidebar">
             <div class="brand-card">
@@ -783,6 +791,22 @@
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+    <script src="{{ url_for('static', filename='js/auth.js') }}"></script>
     <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    <script>
+        if (auth.isAuthenticated()) {
+            const user = auth.getUser();
+            document.getElementById('userDisplay').textContent = `${user.first_name || user.username}`;
+
+            document.getElementById('logoutBtn').addEventListener('click', async () => {
+                try {
+                    await auth.logout();
+                    window.location.href = '/login';
+                } catch (error) {
+                    alert('Erro ao sair: ' + error.message);
+                }
+            });
+        }
+    </script>
 </body>
 </html>
